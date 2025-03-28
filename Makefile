@@ -61,11 +61,8 @@ langgraph-dockerfile:
 langgraph-build:
 	langgraph build -t langgraph-sage
 
-langgraph-run:
-	langgraph run -t my-image
-
-langgraph-serve:
-	langgraph serve -t my-image
+#langgraph-dev:
+#	langgraph dev --config langgraph.json
 
 # Start all services
 up:
