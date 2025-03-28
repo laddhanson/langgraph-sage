@@ -1,5 +1,26 @@
 .PHONY: up down logs ps clean python-setup python-envs python-deactivate
 
+# Create and activate Python virtual environment using pyenv
+python-setup:
+	pyenv global system
+	pyenv install 3.11.7
+	pyenv virtualenv-delete langgraph
+	pyenv virtualenv 3.11.7 langgraph
+	pyenv local langgraph
+	pip install --upgrade pip
+
+# List all Python environments
+python-envs:
+	pyenv versions
+
+# Activate Python environment
+activate:
+	pyenv activate langgraph
+
+# Deactivate current Python environment
+deactivate:
+	pyenv deactivate
+
 # Start all services
 up:
 	docker compose up -d
@@ -42,25 +63,6 @@ restart-service:
 # Check service health
 health:
 	docker compose ps --format "table {{.Name}}\t{{.Status}}"
-
-# Create and activate Python virtual environment using pyenv
-python-setup:
-	pyenv install 3.11.7
-	pyenv virtualenv 3.11.7 langgraph
-	pyenv local langgraph
-	pip install --upgrade pip
-
-# List all Python environments
-python-envs:
-	pyenv versions
-
-# Activate Python environment
-activate:
-	pyenv activate langgraph
-
-# Deactivate current Python environment
-deactivate:
-	pyenv deactivate
 
 langgraph-cli:
 	pip install -U langgraph-cli
