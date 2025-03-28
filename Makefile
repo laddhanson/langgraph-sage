@@ -21,6 +21,52 @@ activate:
 deactivate:
 	pyenv deactivate
 
+langgraph-cli:
+	pip install -U langgraph-cli
+
+init:
+	langgraph new --template new-langgraph-project-js my-app
+	rsync -a \
+		--delete \
+		--exclude .git \
+		--exclude .env \
+		--exclude .python-version \
+		--exclude .vscode \
+		--exclude docker-compose.yml \
+		--exclude Makefile \
+		--exclude Makefile.nextjs.mk \
+		--exclude my-app/ \
+		my-app/ .
+	rm -rf my-app
+
+clean:
+	-rm -rf .next node_modules
+
+real-clean: clean
+	find . -mindepth 1 \
+		-not -name '.git' \
+		-not -path './.git/*' \
+		-not -name .env \
+		-not -name .env.local \
+		-not -name .python-version \
+		-not -name docker-compose.yml \
+		-not -name Makefile \
+		-not -name Makefile.nextjs.mk \
+		-not -name '.' \
+		-exec rm -rf {} +
+
+langgraph-dockerfile:
+	langgraph dockerfile --add-docker-compose -c langgraph.json Dockerfile
+
+langgraph-build:
+	langgraph build -t langgraph-sage
+
+langgraph-run:
+	langgraph run -t my-image
+
+langgraph-serve:
+	langgraph serve -t my-image
+
 # Start all services
 up:
 	docker compose up -d
@@ -41,8 +87,8 @@ ps:
 	docker compose ps
 
 # Stop and remove all containers, volumes, and networks
-clean:
-	docker compose down -v
+#clean:
+#	docker compose down -v
 
 # Rebuild and restart services
 rebuild:
@@ -64,18 +110,3 @@ restart-service:
 health:
 	docker compose ps --format "table {{.Name}}\t{{.Status}}"
 
-langgraph-cli:
-	pip install -U langgraph-cli
-
-langgraph-new:
-#	langgraph new --template retrieval-agent-js sage-studio
-	langgraph new --template new-langgraph-project-js sage-studio
-
-langgraph-build:
-	cd sage-studio; langgraph build -t sage-studio
-
-langgraph-run:
-	langgraph run -t my-image
-
-langgraph-serve:
-	langgraph serve -t my-image
