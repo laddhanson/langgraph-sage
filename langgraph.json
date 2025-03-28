@@ -1,7 +1,8 @@
 {
   "node_version": "20",
   "graphs": {
-    "agent1": "./src/agent/graph.ts:graph"
+    "agent1": "./src/agent/graph.ts:graph",
+    "agent2": "./src/agent/graph.ts:graph"
   },
   "env": ".env",
   "dependencies": ["."]
